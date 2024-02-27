@@ -1,8 +1,39 @@
 import boto3
 
-s3=boto3.resource('s3')
+# Get the service resource.
+dynamodb = boto3.resource('dynamodb')
 
-# Print out bucket names
-for bucket in s3.buckets.all():
-    print(bucket.name)
+# Create the DynamoDB table.
+table = dynamodb.create_table(
+    TableName='users',
+    KeySchema=[
+        {
+            'AttributeName': 'username',
+            'KeyType': 'HASH'
+        },
+        {
+            'AttributeName': 'last_name',
+            'KeyType': 'RANGE'
+        }
+    ],
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'username',
+            'AttributeType': 'S'
+        },
+        {
+            'AttributeName': 'last_name',
+            'AttributeType': 'S'
+        },
+    ],
+    ProvisionedThroughput={
+        'ReadCapacityUnits': 5,
+        'WriteCapacityUnits': 5
+    }
+)
 
+# Wait until the table exists.
+table.wait_until_exists()
+
+# Print out some data about the table.
+print(table.item_count)
