@@ -6,6 +6,11 @@ NoSQL db
 AWS cloud storage
 serverless function
 
+boto3 doc
+https://docs.aws.amazon.com/pythonsdk/#:~:text=The%20AWS%20SDK%20for%20Python,%2C%20Amazon%20DynamoDB%2C%20and%20more.
+
+
+
 DATA MODEL
 {
     "title":"title of the movie",
@@ -13,6 +18,11 @@ DATA MODEL
     "genre":"genre of the movie",
     "coverUrl":"url-to-image-in-cloud-storage"
 }
+
+looking at the code in main.py you can see that now it will create a table using the boto3 tool
+now you need to create a film table and pass some values
+
+create a boto3.py file that contains all the create table, add element, and remove element logics so in main.py we can just import the logics
 
 STEPS:
 -install boto3 (AWS SDK for python) with pip,
