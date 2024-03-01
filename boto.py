@@ -1,12 +1,12 @@
 import boto3
 
-class DynamoHelper:
+class DynamoDBHelper:
 
     def __init__(self, table_name, region_name="eu-central-1"):
         self.dynamodb = boto3.resource('dynamodb', region_name=region_name)
         self.table = self.dynamodb.Table(table_name)
 
-    def manage_creation(self, primary_key, attribute_name, attribute_type):
+    def manage_create_table(self, primary_key ):
         """
         Creates a DynamoDB table with a primary key and an attribute.
 
@@ -20,6 +20,10 @@ class DynamoHelper:
             {
                 'AttributeName': primary_key,
                 'KeyType': 'HASH'
+            },
+            {
+                'AttributeName': 'title',
+                'KeyType': 'RANGE'
             }
         ]
 
@@ -29,12 +33,13 @@ class DynamoHelper:
                 'AttributeType': 'S'
             },
             {
-                'AttributeName': attribute_name,
-                'AttributeType': attribute_type
-            }
+                'AttributeName': 'title',
+                'AttributeType': 'S'
+            },
+            
         ]
 
-        self.table.create_table(
+        self.dynamodb.create_table(
             TableName=self.table.table_name,
             KeySchema=key_schema,
             AttributeDefinitions=attribute_definitions,
@@ -43,6 +48,18 @@ class DynamoHelper:
                 'WriteCapacityUnits': 5
             }
         )
+
+    def create_item(self, element_id, element_title, element_year, element_genre, element_cover):
+        self.table.put_item(
+            Item={
+                'id': element_id,
+                'title': element_title,
+                'release_year': element_year,
+                'genre': element_genre,
+                'cover': element_cover
+            }
+        )
+
 
     def update_item(self, primary_key_value, attribute_name, attribute_value):
         """
